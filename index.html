@@ -1,0 +1,1427 @@
+<!doctype html>
+<html lang="en" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Still Space</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&amp;family=Outfit:wght@300;400;500;600&amp;display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Cormorant Garamond', 'serif'],
+                        body: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --text-primary: #1c1917;
+            --text-secondary: #78716c;
+            --card-bg: #fafaf9;
+            --nav-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        .dark {
+            --bg-primary: #0a0a0a;
+            --text-primary: #fafaf9;
+            --text-secondary: #a8a29e;
+            --card-bg: #141414;
+            --nav-bg: rgba(10, 10, 10, 0.9);
+        }
+
+        html,
+        body {
+            height: 100%;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        * {
+            scroll-behavior: smooth;
+        }
+
+        .font-display {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .font-body {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #f5f0eb 0%, #e8e0d8 50%, #f0ebe5 100%);
+        }
+
+        .card-hover {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-hover:hover .card-image {
+            transform: scale(1.05);
+        }
+
+        .card-image {
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stagger-1 {
+            animation-delay: 0.1s;
+        }
+
+        .stagger-2 {
+            animation-delay: 0.2s;
+        }
+
+        .stagger-3 {
+            animation-delay: 0.3s;
+        }
+
+        .stagger-4 {
+            animation-delay: 0.4s;
+        }
+
+        .stagger-5 {
+            animation-delay: 0.5s;
+        }
+
+        .btn-primary {
+            background: #1a1a1a;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #333;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            border: 1.5px solid #1a1a1a;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .section-divider {
+            width: 60px;
+            height: 1px;
+            background: #c9b8a8;
+        }
+
+        /* Typewriter Cursor */
+        .cursor {
+            border-right: 2px solid #1a1a1a;
+            animation: blink 0.75s step-end infinite;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+
+            from,
+            to {
+                border-color: transparent
+            }
+
+            50% {
+                border-color: #1a1a1a
+            }
+        }
+
+        .gallery-item {
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-item img {
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.08);
+        }
+
+        .warm-overlay {
+            background: linear-gradient(45deg, rgba(201, 184, 168, 0.1) 0%, transparent 100%);
+        }
+
+        /* Slider Styles */
+        .slider-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .slider-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slider-item {
+            flex: 0 0 100%;
+            scroll-snap-align: start;
+            position: relative;
+        }
+
+        .slider-dots {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+        }
+
+        .slider-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .slider-dot {
+                width: 5px;
+                height: 5px;
+            }
+        }
+
+        .slider-dot.active {
+            background: white;
+            width: 14px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .slider-dot.active {
+                width: 12px;
+            }
+        }
+
+        .slider-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 20;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .slider-nav-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            scale: 1.1;
+        }
+
+        .group:hover .slider-nav-btn {
+            opacity: 1;
+        }
+
+        .slider-nav-btn.prev {
+            left: 12px;
+        }
+
+        .slider-nav-btn.next {
+            right: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .slider-nav-btn {
+                opacity: 1;
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        .dark img[src*="logo.png"] {
+            filter: invert(1) brightness(2);
+        }
+
+        .dark .section-divider {
+            background: #a8a29e;
+        }
+
+        .dark input,
+        .dark select,
+        .dark textarea {
+            background-color: #141414 !important;
+            color: #fafaf9 !important;
+            border-color: #292524 !important;
+        }
+
+        /* Splash Screen */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+        }
+
+        .dark #splash-screen {
+            background: #0a0a0a;
+        }
+
+        .splash-logo {
+            width: 150px;
+            height: auto;
+            opacity: 0;
+            animation: logoFadeIn 1s ease-out forwards;
+        }
+
+        @keyframes logoFadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        #splash-screen.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        body.show-splash {
+            overflow: hidden;
+        }
+    </style>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+    </style>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+</head>
+
+<body
+    class="min-h-screen flex flex-col font-body bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-300 show-splash">
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <img src="assets/logo.png" alt="LUMIÈRE" class="splash-logo">
+    </div>
+    <div class="flex-grow"><!-- Navigation -->
+        <nav class="fixed top-0 left-0 right-0 z-50 bg-[var(--nav-bg)] backdrop-blur-md transition-colors duration-300">
+            <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
+                <!-- Brand Logo -->
+                <a href="#" class="flex items-center relative z-10">
+                    <img src="assets/logo.png" alt="LUMIÈRE Logo" class="h-10 md:h-14 w-auto object-contain">
+                </a>
+
+                <!-- Centered Nav Links -->
+                <div class="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+                    <a href="#spaces"
+                        class="text-sm font-medium text-stone-500 hover:text-black transition-colors">Studio Spaces</a>
+                    <a href="#portfolio"
+                        class="text-sm font-medium text-stone-500 hover:text-black transition-colors">Portfolio</a>
+                    <a href="#pricing"
+                        class="text-sm font-medium text-stone-500 hover:text-black transition-colors">Pricing</a>
+                </div>
+
+                <!-- Right Action -->
+                <div class="hidden md:flex items-center gap-4">
+                    <button id="themeToggle" onclick="toggleTheme()"
+                        class="p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+                        aria-label="Toggle Theme">
+                        <!-- Sun Icon -->
+                        <svg id="sunIcon" class="hidden dark:block w-5 h-5 text-amber-500" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path
+                                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" />
+                        </svg>
+                        <!-- Moon Icon -->
+                        <svg id="moonIcon" class="block dark:hidden w-5 h-5 text-stone-600" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                        </svg>
+                    </button>
+                    <a href="#book"
+                        class="bg-black dark:bg-white dark:text-black text-white text-sm font-medium px-6 py-2.5 rounded-full hover:bg-stone-800 dark:hover:bg-stone-200 transition-all">Book
+                        Studio</a>
+                </div>
+
+                <button class="md:hidden" onclick="toggleMobileMenu()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg></button>
+            </div><!-- Mobile Menu -->
+            <div id="mobileMenu"
+                class="hidden md:hidden bg-[var(--bg-primary)] border-t border-gray-100 dark:border-stone-800 px-6 py-4 transition-colors duration-300">
+                <div class="flex flex-col gap-4">
+                    <a href="#spaces" class="text-sm font-medium py-2">Studio Spaces</a>
+                    <a href="#portfolio" class="text-sm font-medium py-2">Portfolio</a>
+                    <a href="#pricing" class="text-sm font-medium py-2">Pricing</a>
+                    <div class="flex items-center justify-between py-2">
+                        <span class="text-sm font-medium font-body transition-colors">Switch Theme</span>
+                        <button onclick="toggleTheme()"
+                            class="p-2 rounded-full bg-stone-100 dark:bg-stone-800 transition-colors">
+                            <svg class="block dark:hidden w-5 h-5 text-stone-600" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                            </svg>
+                            <svg class="hidden dark:block w-5 h-5 text-amber-500" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path
+                                    d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <a href="#book"
+                        class="bg-black dark:bg-white dark:text-black text-white text-sm px-5 py-2.5 rounded-full text-center">Book
+                        Now</a>
+                </div>
+            </div>
+        </nav><!-- Hero Section -->
+        <section
+            class="min-h-fit md:min-h-screen flex items-center justify-center pt-28 pb-3 md:pt-10 md:pb-5 relative bg-[var(--bg-primary)] overflow-hidden transition-colors duration-300">
+            <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
+                <h1 id="heroHeadline"
+                    class="fade-in stagger-1 font-body text-5xl md:text-7xl font-bold tracking-tight mb-4 text-[var(--text-primary)] transition-colors duration-300">
+                    Create. Shoot. Deliver.
+                </h1>
+                <p id="heroSubtext"
+                    class="fade-in stagger-2 text-[28px] md:text-[34px] text-[var(--text-secondary)] font-normal mb-12 max-w-4xl mx-auto leading-tight transition-all h-[4.5rem] md:h-auto">
+                    <span id="typewriter"></span><span class="cursor dark:border-white"></span>
+                </p>
+                <div class="fade-in stagger-3 flex flex-col gap-4 items-center max-w-xl mx-auto">
+                    <div class="flex flex-col sm:flex-row gap-4 w-full justify-center">
+                        <a href="#book"
+                            class="flex-1 sm:flex-none sm:w-48 bg-black text-white px-8 py-3.5 rounded-full text-base font-medium hover:bg-stone-800 transition-all text-center">Book
+                            Studio</a>
+                        <a href="#spaces"
+                            class="flex-1 sm:flex-none sm:w-48 bg-stone-100 text-stone-900 px-8 py-3.5 rounded-full text-base font-medium hover:bg-stone-200 transition-all text-center">View
+                            Spaces</a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        <!-- Studio Spaces Section -->
+        <section id="spaces" class="py-6 md:py-16 px-6 bg-[var(--bg-primary)] transition-colors duration-300">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <p class="text-sm tracking-[0.3em] text-[var(--text-secondary)] mb-4 font-light">OUR SPACES</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-light mb-4 text-[var(--text-primary)]">Studio
+                        Setups</h2>
+                    <div class="section-divider mx-auto"></div>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8"><!-- Infinity Backdrop -->
+                    <div
+                        class="card-hover bg-[var(--card-bg)] rounded-3xl overflow-hidden transition-colors duration-300 border border-transparent dark:border-stone-800">
+                        <div class="aspect-[4/5] overflow-hidden relative group">
+                            <div class="slider-container h-full" data-slider="1">
+                                <div class="slider-item">
+                                    <img src="assets/santoni1.jpg" alt="Santoni Angle 1"
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div class="slider-item">
+                                    <img src="assets/santoni2.jpg" alt="Santoni Angle 2"
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div class="slider-item">
+                                    <img src="assets/santoni3.jpg" alt="Santoni Angle 3"
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div class="slider-item">
+                                    <img src="assets/santoni4.jpg" alt="Santoni Angle 4"
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div class="slider-item">
+                                    <img src="assets/santoni5.jpg" alt="Santoni Angle 5"
+                                        class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                            <div class="slider-dots" data-dots="1">
+                                <div class="slider-dot active"></div>
+                                <div class="slider-dot"></div>
+                                <div class="slider-dot"></div>
+                                <div class="slider-dot"></div>
+                                <div class="slider-dot"></div>
+                            </div>
+                            <!-- Nav Buttons -->
+                            <button class="slider-nav-btn prev" onclick="scrollSlider(1, -1)" aria-label="Previous">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <button class="slider-nav-btn next" onclick="scrollSlider(1, 1)" aria-label="Next">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-display text-2xl font-medium mb-2 text-[var(--text-primary)]">Infinity
+                                Backdrop</h3>
+                            <p class="text-stone-500 font-light leading-relaxed mb-4">Seamless cyclorama perfect for
+                                clean,
+                                editorial fashion and product photography.</p>
+                            <a href="./details.html?id=infinity-backdrop"
+                                class="inline-block relative z-10 bg-black dark:bg-white text-white dark:text-black px-6 py-2 rounded-full text-sm font-medium hover:bg-stone-800 dark:hover:bg-stone-200 transition-all">View
+                                More</a>
+                        </div>
+                    </div>
+                    <!-- Vanity Setup -->
+                    <div
+                        class="card-hover bg-[var(--card-bg)] rounded-3xl overflow-hidden transition-colors duration-300 border border-transparent dark:border-stone-800">
+                        <div class="aspect-[4/5] overflow-hidden relative group">
+                            <div class="slider-container h-full" data-slider="2">
+                                <div class="slider-item">
+                                    <img src="assets/heritage1.jpg" alt="Heritage Angle 1"
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div class="slider-item">
+                                    <img src="assets/heritage2.jpg" alt="Heritage Angle 2"
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div class="slider-item">
+                                    <img src="assets/heritage3.jpg" alt="Heritage Angle 3"
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div class="slider-item">
+                                    <img src="assets/heritage4.jpg" alt="Heritage Angle 4"
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div class="slider-item">
+                                    <img src="assets/heritage5.jpg" alt="Heritage Angle 5"
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div class="slider-item">
+                                    <img src="assets/heritage6.jpg" alt="Heritage Angle 6"
+                                        class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                            <div class="slider-dots" data-dots="2">
+                                <div class="slider-dot active"></div>
+                                <div class="slider-dot"></div>
+                                <div class="slider-dot"></div>
+                                <div class="slider-dot"></div>
+                                <div class="slider-dot"></div>
+                                <div class="slider-dot"></div>
+                            </div>
+                            <!-- Nav Buttons -->
+                            <button class="slider-nav-btn prev" onclick="scrollSlider(2, -1)" aria-label="Previous">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <button class="slider-nav-btn next" onclick="scrollSlider(2, 1)" aria-label="Next">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-display text-2xl font-medium mb-2 text-[var(--text-primary)]">Vanity Setup
+                            </h3>
+                            <p class="text-stone-500 font-light leading-relaxed mb-4">Dedicated glam space with
+                                professional
+                                lighting and oversized mirrors for beauty shoots.</p>
+                            <a href="./details.html?id=vanity-setup"
+                                class="inline-block relative z-10 bg-black dark:bg-white text-white dark:text-black px-6 py-2 rounded-full text-sm font-medium hover:bg-stone-800 dark:hover:bg-stone-200 transition-all">View
+                                More</a>
+                        </div>
+                    </div>
+                    <!-- Lifestyle Setup -->
+                    <div
+                        class="card-hover bg-[var(--card-bg)] rounded-3xl overflow-hidden transition-colors duration-300 border border-transparent dark:border-stone-800">
+                        <div class="aspect-[4/5] overflow-hidden relative group">
+                            <div class="slider-container h-full" data-slider="3">
+                                <div class="slider-item">
+                                    <div
+                                        class="w-full h-full bg-gradient-to-br from-stone-100 via-amber-50 to-stone-200 flex items-center justify-center">
+                                        <svg viewbox="0 0 200 200" class="w-32 h-32 text-stone-300">
+                                            <rect x="30" y="80" width="60" height="80" rx="4" fill="none"
+                                                stroke="currentColor" stroke-width="1.5" />
+                                            <ellipse cx="60" cy="70" rx="20" ry="10" fill="none" stroke="currentColor"
+                                                stroke-width="1.5" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="slider-item">
+                                    <div class="w-full h-full bg-stone-100 flex items-center justify-center">
+                                        <span class="text-stone-400 font-light text-sm uppercase tracking-widest">Prop
+                                            Setup</span>
+                                    </div>
+                                </div>
+                                <div class="slider-item">
+                                    <div class="w-full h-full bg-stone-200 flex items-center justify-center">
+                                        <span
+                                            class="text-stone-400 font-light text-sm uppercase tracking-widest">Natural
+                                            Light</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slider-dots" data-dots="3">
+                                <div class="slider-dot active"></div>
+                                <div class="slider-dot"></div>
+                                <div class="slider-dot"></div>
+                            </div>
+                            <!-- Nav Buttons -->
+                            <button class="slider-nav-btn prev" onclick="scrollSlider(3, -1)" aria-label="Previous">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <button class="slider-nav-btn next" onclick="scrollSlider(3, 1)" aria-label="Next">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-display text-2xl font-medium mb-2 text-[var(--text-primary)]">Lifestyle Set
+                            </h3>
+                            <p class="text-stone-500 font-light leading-relaxed mb-4">Curated lifestyle props and
+                                natural
+                                lighting for authentic brand storytelling.</p>
+                            <a href="./details.html?id=lifestyle-set"
+                                class="inline-block relative z-10 bg-black dark:bg-white text-white dark:text-black px-6 py-2 rounded-full text-sm font-medium hover:bg-stone-800 dark:hover:bg-stone-200 transition-all">View
+                                More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section> <!-- Portfolio Section -->
+        <section id="portfolio"
+            class="py-12 md:py-16 px-6 bg-[var(--bg-primary)] dark:bg-stone-900/20 transition-colors duration-300">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <p class="text-sm tracking-[0.3em] text-[var(--text-secondary)] mb-4 font-light">PORTFOLIO</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-light mb-4 text-[var(--text-primary)]">Recent Work
+                    </h2>
+                    <div class="section-divider mx-auto"></div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6"><!-- Gallery Items -->
+                    <div class="gallery-item aspect-[3/4] relative group card-hover">
+                        <div class="slider-container h-full" data-slider="4">
+                            <div class="slider-item">
+                                <img src="assets/alizay1.jpg" alt="Alizay Shoot 1" class="w-full h-full object-cover">
+                            </div>
+                            <div class="slider-item">
+                                <img src="assets/alizay2.jpg" alt="Alizay Shoot 2" class="w-full h-full object-cover">
+                            </div>
+                            <div class="slider-item">
+                                <img src="assets/alizay3.jpg" alt="Alizay Shoot 3" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+
+                        <!-- Overlay Text -->
+                        <div
+                            class="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-black/60 to-transparent pointer-events-none transition-opacity duration-500 group-hover:from-black/80">
+                            <p class="text-white text-[10px] md:text-xs tracking-[0.3em] font-light uppercase mb-1">
+                                PERSONAL</p>
+                            <h3 class="text-white font-display text-lg md:text-xl">Profile Shoot</h3>
+                        </div>
+
+                        <!-- Dots -->
+                        <div class="slider-dots bottom-4" data-dots="4">
+                            <div class="slider-dot active"></div>
+                            <div class="slider-dot"></div>
+                            <div class="slider-dot"></div>
+                        </div>
+
+                        <!-- Nav Buttons (Shared Component Styles) -->
+                        <button class="slider-nav-btn prev" onclick="scrollSlider(4, -1)" aria-label="Previous">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button class="slider-nav-btn next" onclick="scrollSlider(4, 1)" aria-label="Next">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="gallery-item aspect-[3/4] relative group card-hover">
+                        <div class="slider-container h-full" data-slider="5">
+                            <div class="slider-item">
+                                <img src="assets/designer1.jpg" alt="Brand Shoot 1" class="w-full h-full object-cover">
+                            </div>
+                            <div class="slider-item">
+                                <img src="assets/designer2.jpg" alt="Brand Shoot 2" class="w-full h-full object-cover">
+                            </div>
+                            <div class="slider-item">
+                                <img src="assets/designer3.jpg" alt="Brand Shoot 3" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+
+                        <!-- Overlay Text -->
+                        <div
+                            class="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-black/60 to-transparent pointer-events-none transition-opacity duration-500 group-hover:from-black/80">
+                            <p class="text-white text-[10px] md:text-xs tracking-[0.3em] font-light uppercase mb-1">
+                                COMMERCIAL</p>
+                            <h3 class="text-white font-display text-lg md:text-xl">Brand Shoot</h3>
+                        </div>
+
+                        <!-- Dots -->
+                        <div class="slider-dots bottom-4" data-dots="5">
+                            <div class="slider-dot active"></div>
+                            <div class="slider-dot"></div>
+                            <div class="slider-dot"></div>
+                        </div>
+
+                        <!-- Nav Buttons -->
+                        <button class="slider-nav-btn prev" onclick="scrollSlider(5, -1)" aria-label="Previous">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button class="slider-nav-btn next" onclick="scrollSlider(5, 1)" aria-label="Next">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="gallery-item aspect-[3/4] relative group card-hover">
+                        <div class="slider-container h-full" data-slider="6">
+                            <div class="slider-item">
+                                <img src="assets/leather1.jpg" alt="Leather Jacket 1"
+                                    class="w-full h-full object-cover">
+                            </div>
+                            <div class="slider-item">
+                                <img src="assets/leather2.jpg" alt="Leather Jacket 2"
+                                    class="w-full h-full object-cover">
+                            </div>
+                            <div class="slider-item">
+                                <img src="assets/leather3.jpg" alt="Leather Jacket 3"
+                                    class="w-full h-full object-cover">
+                            </div>
+                            <div class="slider-item">
+                                <img src="assets/leather4.jpg" alt="Leather Jacket 4"
+                                    class="w-full h-full object-cover">
+                            </div>
+                        </div>
+
+                        <!-- Overlay Text -->
+                        <div
+                            class="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-black/60 to-transparent pointer-events-none transition-opacity duration-500 group-hover:from-black/80">
+                            <p class="text-white text-[10px] md:text-xs tracking-[0.3em] font-light uppercase mb-1">
+                                E-COMMERCE</p>
+                            <h3 class="text-white font-display text-lg md:text-xl">Leather jacket for Amazon</h3>
+                        </div>
+
+                        <!-- Dots -->
+                        <div class="slider-dots bottom-4" data-dots="6">
+                            <div class="slider-dot active"></div>
+                            <div class="slider-dot"></div>
+                            <div class="slider-dot"></div>
+                            <div class="slider-dot"></div>
+                        </div>
+
+                        <!-- Nav Buttons -->
+                        <button class="slider-nav-btn prev" onclick="scrollSlider(6, -1)" aria-label="Previous">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button class="slider-nav-btn next" onclick="scrollSlider(6, 1)" aria-label="Next">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="gallery-item aspect-[3/4] relative group card-hover">
+                        <div class="slider-container h-full" data-slider="7">
+                            <div class="slider-item">
+                                <img src="assets/shiza1.jpg" alt="Shiza Shoot 1" class="w-full h-full object-cover">
+                            </div>
+                            <div class="slider-item">
+                                <img src="assets/shiza2.jpg" alt="Shiza Shoot 2" class="w-full h-full object-cover">
+                            </div>
+                            <div class="slider-item">
+                                <img src="assets/shiza3.jpg" alt="Shiza Shoot 3" class="w-full h-full object-cover">
+                            </div>
+                            <div class="slider-item">
+                                <img src="assets/shiza4.jpg" alt="Shiza Shoot 4" class="w-full h-full object-cover">
+                            </div>
+                            <div class="slider-item">
+                                <img src="assets/shiza5.jpg" alt="Shiza Shoot 5" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+
+                        <!-- Overlay Text -->
+                        <div
+                            class="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-black/60 to-transparent pointer-events-none transition-opacity duration-500 group-hover:from-black/80">
+                            <p class="text-white text-[10px] md:text-xs tracking-[0.3em] font-light uppercase mb-1">
+                                PERSONAL</p>
+                            <h3 class="text-white font-display text-lg md:text-xl">Profile Shoot</h3>
+                        </div>
+
+                        <!-- Dots -->
+                        <div class="slider-dots bottom-4" data-dots="7">
+                            <div class="slider-dot active"></div>
+                            <div class="slider-dot"></div>
+                            <div class="slider-dot"></div>
+                            <div class="slider-dot"></div>
+                            <div class="slider-dot"></div>
+                        </div>
+
+                        <!-- Nav Buttons -->
+                        <button class="slider-nav-btn prev" onclick="scrollSlider(7, -1)" aria-label="Previous">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button class="slider-nav-btn next" onclick="scrollSlider(7, 1)" aria-label="Next">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div
+                        class="gallery-item col-span-2 aspect-[16/9] bg-gradient-to-br from-stone-100 via-amber-50 to-stone-200">
+                        <div class="w-full h-full flex items-center justify-center"><span
+                                class="text-stone-400 text-xs tracking-widest">CAMPAIGN SHOOT</span>
+                        </div>
+                    </div>
+                    <div
+                        class="gallery-item col-span-2 aspect-[16/9] bg-gradient-to-br from-rose-100 via-gray-50 to-amber-100">
+                        <div class="w-full h-full flex items-center justify-center"><span
+                                class="text-stone-400 text-xs tracking-widest">SOCIAL CONTENT</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section> <!-- Pricing Section -->
+        <section id="pricing" class="py-12 md:py-16 px-6 bg-[var(--bg-primary)] transition-colors duration-300">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-16">
+                    <p class="text-sm tracking-[0.3em] text-[var(--text-secondary)] mb-4 font-light">PRICING</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-light mb-4 text-[var(--text-primary)]">Simple
+                        &amp; Transparent</h2>
+                    <div class="section-divider mx-auto"></div>
+                </div>
+                <div class="grid md:grid-cols-3 gap-6"><!-- Basic -->
+                    <div
+                        class="card-hover bg-[var(--card-bg)] border border-stone-200 dark:border-stone-800 rounded-3xl p-8 text-center transition-colors duration-300">
+                        <p class="text-sm tracking-widest text-[var(--text-secondary)] mb-2">BASIC</p>
+                        <h3 class="font-display text-5xl font-light mb-1 text-[var(--text-primary)]">15,000/-</h3>
+                        <p class="text-[var(--text-secondary)] mb-6">2 Hours</p>
+                        <ul class="text-left space-y-3 mb-8">
+                            <li class="flex items-center gap-3 text-sm text-stone-600">
+                                <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor"
+                                    viewbox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg> Full studio access
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-stone-600">
+                                <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor"
+                                    viewbox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg> Lighting equipment
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-stone-600">
+                                <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor"
+                                    viewbox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg> WiFi included
+                            </li>
+                        </ul><a href="#book" class="btn-secondary block w-full py-3 rounded-full text-sm">Select</a>
+                    </div><!-- Half Day - Featured -->
+                    <div
+                        class="card-hover bg-stone-900 text-white rounded-3xl p-8 text-center relative md:-translate-y-4">
+                        <div
+                            class="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-600 text-white text-xs px-4 py-1 rounded-full">
+                            POPULAR
+                        </div>
+                        <p class="text-sm tracking-widest text-stone-400 mb-2">HALF DAY</p>
+                        <h3 class="font-display text-5xl font-light mb-1">20,000/-</h3>
+                        <p class="text-stone-400 mb-6">4 Hours</p>
+                        <ul class="text-left space-y-3 mb-8">
+                            <li class="flex items-center gap-3 text-sm text-stone-300">
+                                <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor"
+                                    viewbox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg> Full studio access
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-stone-300">
+                                <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor"
+                                    viewbox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg> All lighting equipment
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-stone-300">
+                                <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor"
+                                    viewbox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg> Props &amp; backdrops
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-stone-300">
+                                <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor"
+                                    viewbox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg> Refreshments
+                            </li>
+                        </ul><button onclick="selectPlan('Half Day')"
+                            class="bg-white text-stone-900 block w-full py-3 rounded-full text-sm font-medium hover:bg-stone-100 transition-colors">Select</button>
+                    </div><!-- Full Day -->
+                    <div class="card-hover bg-white border border-stone-200 rounded-3xl p-8 text-center">
+                        <p class="text-sm tracking-widest text-stone-400 mb-2">FULL DAY</p>
+                        <h3 class="font-display text-5xl font-light mb-1">40,000/-</h3>
+                        <p class="text-stone-500 mb-6">8 Hours</p>
+                        <ul class="text-left space-y-3 mb-8">
+                            <li class="flex items-center gap-3 text-sm text-stone-600">
+                                <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor"
+                                    viewbox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg> Exclusive studio access
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-stone-600">
+                                <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor"
+                                    viewbox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg> All equipment &amp; props
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-stone-600">
+                                <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor"
+                                    viewbox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg> Priority support
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-stone-600">
+                                <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor"
+                                    viewbox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg> Catered lunch
+                            </li>
+                        </ul><a href="#book" class="btn-secondary block w-full py-3 rounded-full text-sm">Select</a>
+                    </div>
+                </div>
+                <p class="text-center text-stone-500 text-sm mt-10">
+                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg> All packages include professional lighting equipment
+                </p>
+            </div>
+        </section> <!-- About Section -->
+        <section id="about"
+            class="py-12 md:py-16 px-6 bg-gradient-to-b from-[var(--bg-primary)] to-[var(--bg-primary)] transition-colors duration-300">
+            <div class="max-w-4xl mx-auto text-center">
+                <p class="text-sm tracking-[0.3em] text-[var(--text-secondary)] mb-4 font-light">ABOUT US</p>
+                <h2 class="font-display text-4xl md:text-5xl font-light mb-8 text-[var(--text-primary)]">Our Story</h2>
+                <div class="section-divider mx-auto mb-12"></div>
+                <p id="aboutText"
+                    class="text-xl md:text-2xl font-light text-[var(--text-secondary)] leading-relaxed mb-10">A modern
+                    content studio built for brands and creators to produce high-quality visuals. We believe every
+                    creator deserves access to professional spaces that inspire and elevate their work.</p>
+                <div class="grid grid-cols-3 gap-8 max-w-md mx-auto">
+                    <div>
+                        <p class="font-display text-4xl font-light text-[var(--text-primary)]">500+</p>
+                        <p class="text-sm text-[var(--text-secondary)]">Shoots</p>
+                    </div>
+                    <div>
+                        <p class="font-display text-4xl font-light text-[var(--text-primary)]">200+</p>
+                        <p class="text-sm text-[var(--text-secondary)]">Brands</p>
+                    </div>
+                    <div>
+                        <p class="font-display text-4xl font-light text-[var(--text-primary)]">5★</p>
+                        <p class="text-sm text-[var(--text-secondary)]">Rating</p>
+                    </div>
+                </div>
+            </div>
+        </section><!-- Booking CTA Section -->
+        <section id="book" class="py-12 md:py-16 px-6 bg-stone-900 text-white relative overflow-hidden">
+            <!-- Decorative -->
+            <div class="absolute top-0 left-0 w-64 h-64 bg-amber-600/10 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 right-0 w-96 h-96 bg-stone-700/50 rounded-full blur-3xl"></div>
+            <div class="max-w-3xl mx-auto text-center relative z-10">
+                <p class="text-sm tracking-[0.3em] text-stone-400 mb-4 font-light">GET STARTED</p>
+                <h2 id="ctaHeadline" class="font-display text-4xl md:text-6xl font-light mb-6">Book Your Shoot Today
+                </h2>
+                <p class="text-stone-400 text-lg mb-10 font-light">Ready to create something amazing? Let's make it
+                    happen.</p>
+
+                <!-- Booking Lead Form -->
+                <div
+                    class="max-w-xl mx-auto mb-16 text-left bg-stone-800/50 p-8 rounded-3xl border border-stone-700 backdrop-blur-sm">
+                    <form id="booking-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-stone-500 mb-2">Name</label>
+                                <input type="text" id="contact-name" required
+                                    class="w-full bg-stone-900 border border-stone-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-stone-500 transition-colors"
+                                    placeholder="Your name">
+                            </div>
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-stone-500 mb-2">Email</label>
+                                <input type="email" id="contact-email" required
+                                    class="w-full bg-stone-900 border border-stone-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-stone-500 transition-colors"
+                                    placeholder="hello@company.com">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-stone-500 mb-2">Select
+                                Plan</label>
+                            <select id="plan-select"
+                                class="w-full bg-stone-900 border border-stone-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-stone-500 transition-colors appearance-none cursor-pointer">
+                                <option value="">Choose a package</option>
+                                <option value="Basic">Basic (2 Hours)</option>
+                                <option value="Half Day">Half Day (4 Hours)</option>
+                                <option value="Full Day">Full Day (8 Hours)</option>
+                                <option value="Custom">Custom Inquiry</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-stone-500 mb-2">Notes</label>
+                            <textarea id="contact-notes" rows="3"
+                                class="w-full bg-stone-900 border border-stone-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-stone-500 transition-colors"
+                                placeholder="Tell us about your project..."></textarea>
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-white text-stone-900 py-4 rounded-xl text-sm font-semibold uppercase tracking-widest hover:bg-stone-200 transition-all">Submit
+                            Inquiry</button>
+                    </form>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center"><a href="https://wa.me/1234567890"
+                        target="_blank" rel="noopener noreferrer"
+                        class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-full text-sm tracking-wide flex items-center justify-center gap-3 transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24">
+                            <path
+                                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                        </svg> WhatsApp Booking </a> <a href="mailto:hello@lumiere.studio"
+                        class="border border-stone-600 hover:bg-stone-800 text-white px-8 py-4 rounded-full text-sm tracking-wide transition-colors">
+                        Email Us </a>
+                </div>
+            </div>
+        </section>
+    </div>
+    <footer class="py-3 px-8 bg-black w-full">
+        <div
+            class="flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-[0.2em] text-stone-500 gap-4">
+            <div class="flex gap-8">
+                <a href="#" class="hover:text-white transition-colors">Terms & Support</a>
+                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+            </div>
+            <div class="text-stone-600">
+                Designed by <span class="text-stone-400">Still Space</span>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Default configuration
+        const defaultConfig = {
+            hero_headline: 'Create. Shoot. Deliver.',
+            hero_subtext: 'Professional studio spaces for modern brands and creators',
+            about_text: 'A modern content studio built for brands and creators to produce high-quality visuals. We believe every creator deserves access to professional spaces that inspire and elevate their work.',
+            cta_headline: 'Book Your Shoot Today',
+            background_color: '#ffffff',
+            surface_color: '#ffffff',
+            text_color: '#1c1917',
+            primary_action_color: '#1a1a1a',
+            secondary_action_color: '#c9b8a8',
+            font_family: 'Cormorant Garamond',
+            font_size: 16
+        };
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Close mobile menu on link click
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('mobileMenu').classList.add('hidden');
+            });
+        });
+
+        // Initialize Element SDK
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange: async (config) => {
+                    // Update hero section
+                    const heroHeadline = document.getElementById('heroHeadline');
+                    if (heroHeadline) {
+                        const text = config.hero_headline || defaultConfig.hero_headline;
+                        heroHeadline.innerHTML = text.replace(/\.\s*/g, '.<br/>');
+                    }
+
+                    const heroSubtext = document.getElementById('heroSubtext');
+                    if (heroSubtext) {
+                        heroSubtext.textContent = config.hero_subtext || defaultConfig.hero_subtext;
+                    }
+
+                    // Update about section
+                    const aboutText = document.getElementById('aboutText');
+                    if (aboutText) {
+                        aboutText.textContent = config.about_text || defaultConfig.about_text;
+                    }
+
+                    // Update CTA section
+                    const ctaHeadline = document.getElementById('ctaHeadline');
+                    if (ctaHeadline) {
+                        ctaHeadline.textContent = config.cta_headline || defaultConfig.cta_headline;
+                    }
+
+                    // Apply colors
+                    const bgColor = config.background_color || defaultConfig.background_color;
+                    const surfaceColor = config.surface_color || defaultConfig.surface_color;
+                    const textColor = config.text_color || defaultConfig.text_color;
+                    const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+                    const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+
+                    document.documentElement.style.setProperty('--bg-color', bgColor);
+                    document.querySelectorAll('.hero-gradient').forEach(el => {
+                        el.style.background = `linear-gradient(135deg, ${bgColor} 0%, ${surfaceColor} 50%, ${bgColor} 100%)`;
+                    });
+
+                    document.querySelectorAll('.btn-primary').forEach(el => {
+                        el.style.background = primaryColor;
+                    });
+
+                    document.querySelectorAll('.section-divider').forEach(el => {
+                        el.style.background = secondaryColor;
+                    });
+
+                    // Apply fonts
+                    const fontFamily = config.font_family || defaultConfig.font_family;
+                    const fontSize = config.font_size || defaultConfig.font_size;
+
+                    document.querySelectorAll('.font-display').forEach(el => {
+                        el.style.fontFamily = `${fontFamily}, serif`;
+                    });
+
+                    document.querySelectorAll('h1, h2, h3').forEach(el => {
+                        el.style.fontFamily = `${fontFamily}, serif`;
+                    });
+
+                    document.body.style.fontSize = `${fontSize}px`;
+                },
+                mapToCapabilities: (config) => ({
+                    recolorables: [
+                        {
+                            get: () => config.background_color || defaultConfig.background_color,
+                            set: (value) => window.elementSdk.setConfig({ background_color: value })
+                        },
+                        {
+                            get: () => config.surface_color || defaultConfig.surface_color,
+                            set: (value) => window.elementSdk.setConfig({ surface_color: value })
+                        },
+                        {
+                            get: () => config.text_color || defaultConfig.text_color,
+                            set: (value) => window.elementSdk.setConfig({ text_color: value })
+                        },
+                        {
+                            get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                            set: (value) => window.elementSdk.setConfig({ primary_action_color: value })
+                        },
+                        {
+                            get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+                            set: (value) => window.elementSdk.setConfig({ secondary_action_color: value })
+                        }
+                    ],
+                    borderables: [],
+                    fontEditable: {
+                        get: () => config.font_family || defaultConfig.font_family,
+                        set: (value) => window.elementSdk.setConfig({ font_family: value })
+                    },
+                    fontSizeable: {
+                        get: () => config.font_size || defaultConfig.font_size,
+                        set: (value) => window.elementSdk.setConfig({ font_size: value })
+                    }
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ['hero_headline', config.hero_headline || defaultConfig.hero_headline],
+                    ['hero_subtext', config.hero_subtext || defaultConfig.hero_subtext],
+                    ['about_text', config.about_text || defaultConfig.about_text],
+                    ['cta_headline', config.cta_headline || defaultConfig.cta_headline]
+                ])
+            });
+        }
+
+        // Add intersection observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section:not(:first-child)').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'all 0.8s ease';
+            observer.observe(section);
+        });
+
+        // Typewriter Effect logic
+        const typewriterElement = document.getElementById('typewriter');
+        const phrases = [
+            'Professional studio spaces for modern brands and creators.',
+            'Flexible, design-forward spaces tailored for ambitious creative teams.'
+        ];
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typeSpeed = 100;
+
+        function type() {
+            const currentPhrase = phrases[phraseIndex];
+
+            if (isDeleting) {
+                typewriterElement.textContent = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+                typeSpeed = 50;
+            } else {
+                typewriterElement.textContent = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+                typeSpeed = 100;
+            }
+
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                isDeleting = true;
+                typeSpeed = 2000; // Pause at the end
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                typeSpeed = 500; // Pause before starting next phrase
+            }
+
+            setTimeout(type, typeSpeed);
+        }
+
+        // Selection and Smooth Scroll logic
+        function selectPlan(plan) {
+            const select = document.getElementById('plan-select');
+            const bookSection = document.getElementById('book');
+
+            if (select) select.value = plan;
+            if (bookSection) {
+                bookSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Theme Toggle Logic
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        // Initialize Theme
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        }
+
+        // Update all Book Studio links to point to the form
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            setTimeout(type, 1000);
+
+            document.querySelectorAll('a[href="#book"]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById('book').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            // Form Submission Logic
+            const bookingForm = document.getElementById('booking-form');
+            if (bookingForm) {
+                bookingForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    const submitBtn = bookingForm.querySelector('button[type="submit"]');
+                    const originalBtnText = submitBtn.textContent;
+                    submitBtn.textContent = 'Sending...';
+                    submitBtn.disabled = true;
+
+                    const formData = {
+                        name: document.getElementById('contact-name').value,
+                        email: document.getElementById('contact-email').value,
+                        plan: document.getElementById('plan-select').value,
+                        notes: document.getElementById('contact-notes').value
+                    };
+
+                    try {
+                        const response = await fetch('/api/contact', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(formData),
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            alert('Thank you! Your inquiry has been sent successfully.');
+                            bookingForm.reset();
+                        } else {
+                            alert('Error: ' + (result.message || 'Something went wrong. Please try again.'));
+                        }
+                    } catch (error) {
+                        console.error('Submission error:', error);
+                        alert('Error: Could not connect to the server. Please try again later.');
+                    } finally {
+                        submitBtn.textContent = originalBtnText;
+                        submitBtn.disabled = false;
+                    }
+                });
+            }
+
+            // Slider Scroll Synchronization
+            const sliders = document.querySelectorAll('.slider-container');
+            sliders.forEach(slider => {
+                const sliderId = slider.getAttribute('data-slider');
+                const dotsContainer = document.querySelector(`[data-dots="${sliderId}"]`);
+                const dots = dotsContainer.querySelectorAll('.slider-dot');
+
+                slider.addEventListener('scroll', () => {
+                    const scrollLeft = slider.scrollLeft;
+                    const width = slider.offsetWidth;
+                    const activeIndex = Math.round(scrollLeft / width);
+
+                    dots.forEach((dot, index) => {
+                        if (index === activeIndex) {
+                            dot.classList.add('active');
+                        } else {
+                            dot.classList.remove('active');
+                        }
+                    });
+                });
+
+                // Optional: Click dots to scroll
+                dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        slider.scrollTo({
+                            left: index * slider.offsetWidth,
+                            behavior: 'smooth'
+                        });
+                    });
+                });
+            });
+        });
+
+        // Splash Screen Logic
+        window.addEventListener('load', () => {
+            const splash = document.getElementById('splash-screen');
+            const body = document.body;
+
+            // Set light/dark background for splash before showing
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+
+            // Delay before starting fade out to allow logo fade-in to shine
+            setTimeout(() => {
+                splash.classList.add('fade-out');
+                body.classList.remove('show-splash');
+
+                // Remove from DOM after transition
+                setTimeout(() => {
+                    splash.remove();
+                }, 800);
+            }, 1500);
+        });
+
+        function scrollSlider(sliderId, direction) {
+            const slider = document.querySelector(`[data-slider="${sliderId}"]`);
+            if (slider) {
+                slider.scrollBy({
+                    left: direction * slider.offsetWidth,
+                    behavior: 'smooth'
+                });
+            }
+        }
+    </script>
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9d35a14db0ca21e6',t:'MTc3MjAwNjAxOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>

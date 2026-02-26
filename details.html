@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Details - Still Space</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&amp;family=Outfit:wght@300;400;500;600&amp;display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Cormorant Garamond', 'serif'],
+                        body: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --text-primary: #1c1917;
+            --text-secondary: #78716c;
+            --card-bg: #fafaf9;
+            --nav-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        .dark {
+            --bg-primary: #0a0a0a;
+            --text-primary: #fafaf9;
+            --text-secondary: #a8a29e;
+            --card-bg: #141414;
+            --nav-bg: rgba(10, 10, 10, 0.9);
+        }
+
+        html,
+        body {
+            height: 100%;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .font-display {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .font-body {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .gallery-image {
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-item:hover .gallery-image {
+            transform: scale(1.03);
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen font-body bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-300">
+
+    <!-- Simple Navigation -->
+    <nav
+        class="fixed top-0 left-0 right-0 z-50 bg-[var(--nav-bg)] backdrop-blur-md transition-colors duration-300 border-b border-stone-100 dark:border-stone-800">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <img src="assets/logo.png" alt="LUMIÈRE Logo"
+                    class="h-8 md:h-10 w-auto object-contain dark:invert dark:brightness-200">
+            </div>
+            <button onclick="toggleTheme()"
+                class="p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+                <svg id="themeIcon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"></svg>
+            </button>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="mb-16 fade-in">
+            <a href="index.html"
+                class="inline-flex items-center gap-2 text-xs tracking-widest text-stone-400 hover:text-[var(--text-primary)] transition-colors uppercase mb-8 group">
+                <svg class="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Home
+            </a>
+            <p id="spaceCategory"
+                class="text-xs tracking-[0.3em] text-[var(--text-secondary)] mb-4 font-light uppercase">STUDIO SETUP</p>
+            <h1 id="spaceTitle" class="font-display text-5xl md:text-7xl font-light mb-6"></h1>
+            <p id="spaceDescription" class="text-xl text-[var(--text-secondary)] font-light max-w-3xl leading-relaxed">
+            </p>
+        </header>
+
+        <!-- Gallery Grid -->
+        <div id="imageGallery" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 fade-in" style="animation-delay: 0.2s;">
+            <!-- Images will be injected here -->
+        </div>
+    </main>
+
+    <footer class="py-12 border-t border-stone-100 dark:border-stone-800">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-xs tracking-widest text-stone-500 uppercase">&copy; 2024 LUMIÈRE STUDIO. ALL RIGHTS RESERVED.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        const spaceData = {
+            'infinity-backdrop': {
+                title: 'Infinity Backdrop',
+                description: 'Seamless cyclorama perfect for clean, editorial fashion and product photography. Our 20ft x 20ft cove provides an endless horizon for your most ambitious shoots.',
+                images: [
+                    'assets/santoni1.jpg',
+                    'assets/santoni2.jpg',
+                    'assets/santoni3.jpg',
+                    'assets/santoni4.jpg',
+                    'assets/santoni5.jpg'
+                ]
+            },
+            'vanity-setup': {
+                title: 'Vanity Setup',
+                description: 'Dedicated glam space with professional lighting and oversized mirrors for beauty shoots. Designed for both production value and comfort, perfect for makeup tutorials and beauty portraits.',
+                images: [
+                    'assets/heritage1.jpg',
+                    'assets/heritage2.jpg',
+                    'assets/heritage3.jpg',
+                    'assets/heritage4.jpg',
+                    'assets/heritage5.jpg',
+                    'assets/heritage6.jpg'
+                ]
+            },
+            'lifestyle-set': {
+                title: 'Lifestyle Set',
+                description: 'Curated lifestyle props and natural lighting for authentic brand storytelling. A versatile space that mimics high-end interior environments for organic content creation.',
+                images: [
+                    'assets/designer1.jpg', // Reusing some high-quality assets for placeholder
+                    'assets/designer2.jpg',
+                    'assets/designer3.jpg',
+                    'assets/alizay1.jpg'
+                ]
+            }
+        };
+
+        function initPage() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const data = spaceData[id] || spaceData['infinity-backdrop'];
+
+            document.getElementById('spaceTitle').textContent = data.title;
+            document.getElementById('spaceDescription').textContent = data.description;
+            document.title = `${data.title} - Still Space`;
+
+            const gallery = document.getElementById('imageGallery');
+            data.images.forEach((src, index) => {
+                const div = document.createElement('div');
+                div.className = 'gallery-item overflow-hidden rounded-2xl bg-stone-100 dark:bg-stone-900 aspect-[4/5] fade-in';
+                div.style.animationDelay = `${0.1 * (index + 2)}s`;
+
+                // Randomly make some items span 2 columns for a masonry look on desktop
+                if (index % 4 === 0) {
+                    // div.classList.add('md:col-span-2', 'aspect-video');
+                }
+
+                div.innerHTML = `
+                    <img src="${src}" alt="${data.title} ${index + 1}" class="gallery-image w-full h-full object-cover">
+                `;
+                gallery.appendChild(div);
+            });
+        }
+
+        // Theme Toggle Logic
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeIcon(isDark);
+        }
+
+        function updateThemeIcon(isDark) {
+            const icon = document.getElementById('themeIcon');
+            if (isDark) {
+                icon.innerHTML = '<path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" />';
+            } else {
+                icon.innerHTML = '<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    updateThemeIcon(true);
+                } else {
+                    updateThemeIcon(false);
+                }
+            } catch (e) {
+                console.log('Theme error:', e);
+                updateThemeIcon(false);
+            }
+            initPage();
+        });
+    </script>
+</body>
+
+</html>
